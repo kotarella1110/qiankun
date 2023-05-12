@@ -412,6 +412,24 @@ it('native window function calling should always be bound with window', () => {
   expect(proxy.nativeWindowFunction()).toBe('success');
 });
 
+it('proxy variable should not be overridden by the native window variable', () => {
+  const { proxy } = new ProxySandbox('mustBeBoundWithWindowReference');
+
+  window.TEST = 'window';
+  expect(proxy.TEST).toBe('window');
+});
+
+it('proxy variable should not be overridden by the native window variable', () => {
+  const { proxy } = new ProxySandbox('mustBeBoundWithWindowReference');
+
+  proxy.TEST = 'proxy';
+  expect(proxy.TEST).toBe('proxy');
+
+  window.TEST = 'window';
+  expect(proxy.TEST).toBe('proxy');
+  expect(proxy.TEST).not.toBe('window');
+});
+
 describe('should work well while the property existed in global context before', () => {
   it('should not write value while the readonly property existed in global context but not in sandbox', () => {
     Object.defineProperty(window, 'readonlyPropertyInGlobalContext', {
